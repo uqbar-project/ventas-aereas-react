@@ -10,7 +10,20 @@ import { store } from '../dominio/vuelos';
 class InfoVuelosAviones extends React.Component {
     constructor(props) {
         super(props)
-        this.state = { avionElegido: store.avionConNombre("Airbus 330") }
+        this.state = { 
+            avionElegido: {},
+            aviones: [],
+            vuelos: []
+        }
+    }
+
+    componentWillMount() {
+        // Esto debería venir del server
+        this.setState({
+            avionElegido: store.avionConNombre("Airbus 330"),
+            aviones: store.aviones(),
+            vuelos: store.vuelos()
+        })
     }
 
     render() {
@@ -80,7 +93,7 @@ class InfoVuelosAviones extends React.Component {
             <div className="panel panel-info">
                 <div className="panel-body">
                     <div className="text-center">
-                        { store.aviones().map(avion => this.seleccionAvion(avion.nombre())) }
+                        { this.state.aviones.map(avion => this.seleccionAvion(avion.nombre())) }
                     </div>
                 </div>
             </div>
@@ -116,19 +129,17 @@ class InfoVuelosAviones extends React.Component {
                             </tr>
                         </thead>
                         <tbody>
-                            {store.vuelos().map(vuelo => {
-                                return (
-                                    <tr key={vuelo.numero()}>
-                                        <td>{vuelo.tipoAsString()}</td>
-                                        <td>{vuelo.origen().nombre()}</td>
-                                        <td>{vuelo.destino().nombre()}</td>
-                                        <td>{vuelo.cantidadAsientosLibres()}</td>
-                                        <td>{vuelo.precioPasaje()}</td>
-                                        <td>{vuelo.cantidadPasajesEmitidos()}</td>
-                                        <td>{vuelo.importeTotalPasajesEmitidos()}</td>
-                                    </tr>
-                                )
-                            })}
+                            {this.state.vuelos.map(vuelo => 
+                                <tr key={vuelo.numero()}>
+                                    <td>{vuelo.tipoAsString()}</td>
+                                    <td>{vuelo.origen().nombre()}</td>
+                                    <td>{vuelo.destino().nombre()}</td>
+                                    <td>{vuelo.cantidadAsientosLibres()}</td>
+                                    <td>{vuelo.precioPasaje()}</td>
+                                    <td>{vuelo.cantidadPasajesEmitidos()}</td>
+                                    <td>{vuelo.importeTotalPasajesEmitidos()}</td>
+                                </tr>
+                            )}
                         </tbody>
                     </table>
                 </div>
